@@ -1,0 +1,734 @@
+/*
+ * OceanQuiz — giao diện khu vực người học
+ * Gồm: đăng nhập, đăng ký, bảng điều khiển, bảng xếp hạng, ôn tập câu sai.
+ * Chỉ HTML + CSS, không JavaScript. Nạp sau base.css qua @push('styles').
+ */
+
+/* --- Tiện ích chung cho các trang trong file này ----------------------- */
+
+.learner-page {
+    padding-block: 40px 80px;
+}
+
+.learner-page .page-head {
+    margin-bottom: var(--space-6);
+}
+
+a:focus-visible,
+summary:focus-visible,
+.btn:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* ======================================================================
+ * 1. Đăng nhập / Đăng ký
+ * ==================================================================== */
+
+/*
+ * Layout chung hiển thị flash lỗi phía trên nội dung. Với hai trang xác
+ * thực, lỗi đã được hiển thị ngay trong thẻ nên ẩn bản lặp lại cho gọn.
+ */
+.auth-page .page-flash {
+    display: none;
+}
+
+.auth-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--nav-height));
+    padding: 56px 16px 72px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 470px;
+    padding: 36px 36px 36px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.auth-card__title {
+    margin-bottom: 8px;
+    font-size: 1.9rem;
+    font-weight: 700;
+}
+
+.auth-card__subtitle {
+    margin-bottom: 26px;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+.auth-card .alert {
+    margin-bottom: 20px;
+    line-height: 1.55;
+}
+
+.auth-card .alert ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.auth-card .alert li + li {
+    margin-top: 4px;
+}
+
+.auth-form .field {
+    margin-bottom: 18px;
+}
+
+.auth-form .btn {
+    width: 100%;
+    min-height: 52px;
+    margin-top: 10px;
+    font-size: 1rem;
+}
+
+.field__note {
+    color: var(--text-faint);
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+.auth-switch {
+    margin-top: 28px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: var(--teal);
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    color: var(--teal-hover);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ======================================================================
+ * 2. Bảng điều khiển
+ * ==================================================================== */
+
+.dashboard-head {
+    margin-bottom: var(--space-5);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+}
+
+.dash-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    min-width: 0;
+}
+
+.profile-card__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--teal);
+    color: var(--teal-ink);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.profile-card__label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.profile-card__name {
+    margin-top: 2px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.profile-card__email {
+    margin-top: 2px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    overflow-wrap: anywhere;
+}
+
+.profile-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin-top: 22px;
+}
+
+.profile-tiles .tile__value {
+    font-size: 2rem;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+}
+
+.profile-actions .btn {
+    width: 100%;
+    min-height: 52px;
+}
+
+.points-card__title {
+    margin-bottom: var(--space-3);
+    font-size: 1.2rem;
+}
+
+.points-card p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.65;
+}
+
+.points-card p + p {
+    margin-top: var(--space-3);
+}
+
+.history-card {
+    min-width: 0;
+}
+
+.history-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-5);
+}
+
+.history-title {
+    font-size: 1.45rem;
+}
+
+.history-subtitle {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.94rem;
+}
+
+.history-total {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    white-space: nowrap;
+}
+
+.attempt-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.attempt {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.attempt__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding: 18px 20px;
+}
+
+.attempt__title {
+    color: var(--teal);
+    font-size: 1.06rem;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.attempt__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.attempt__side {
+    text-align: right;
+}
+
+.attempt__score {
+    color: var(--green);
+    font-size: 1.05rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.attempt__correct {
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.attempt__details {
+    border-top: 1px solid var(--border);
+}
+
+.attempt__details > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 12px 20px;
+    color: var(--teal);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+}
+
+.attempt__details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.attempt__details > summary:hover {
+    background: rgba(79, 209, 197, 0.05);
+}
+
+.attempt__details > summary::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-left: auto;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform 0.15s var(--ease);
+}
+
+.attempt__details[open] > summary::after {
+    transform: rotate(-135deg) translateY(-2px);
+}
+
+.attempt__answers {
+    padding: 0 20px 18px;
+}
+
+.answer-line {
+    padding: 12px 0;
+    border-top: 1px dashed rgba(29, 59, 74, 0.85);
+}
+
+.answer-line__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.answer-line__question {
+    color: var(--text-strong);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.answer-line__points {
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.answer-line__points.is-correct {
+    color: var(--green);
+}
+
+.answer-line__points.is-wrong {
+    color: var(--red);
+}
+
+.answer-line__choice {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.answer-line__choice strong {
+    font-weight: 600;
+}
+
+.answer-line__choice strong.is-correct {
+    color: var(--green);
+}
+
+.answer-line__choice strong.is-wrong {
+    color: var(--red);
+}
+
+.answer-line__choice .choice-divider {
+    margin-inline: 6px;
+    color: var(--text-faint);
+}
+
+.answer-more {
+    margin-top: var(--space-3);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.empty-state--history {
+    padding: 40px 20px;
+}
+
+.empty-state__title {
+    margin-bottom: 6px;
+    color: var(--text-strong);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.empty-state .btn {
+    margin-top: var(--space-4);
+}
+
+/* ======================================================================
+ * 3. Bảng xếp hạng
+ * ==================================================================== */
+
+.leaderboard-page .page-title {
+    margin-bottom: 4px;
+}
+
+.lb-table th:first-child,
+.lb-table td:first-child {
+    width: 96px;
+    padding-left: 32px;
+}
+
+.lb-table td {
+    padding-block: 20px;
+}
+
+.lb-rank {
+    color: var(--text-strong);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.lb-name {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    color: var(--text-strong);
+    font-weight: 600;
+}
+
+.lb-table tr.is-self td {
+    background: transparent;
+}
+
+.lb-table .num {
+    color: var(--text-strong);
+    font-weight: 700;
+}
+
+/* ======================================================================
+ * 4. Ôn tập câu sai
+ * ==================================================================== */
+
+.mistake-card {
+    margin-bottom: var(--space-2);
+}
+
+.mistake__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+}
+
+.mistake__zone {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.mistake__time {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.mistake__question {
+    margin-bottom: var(--space-4);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.mistake__answers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+}
+
+.answer-option {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: 13px 15px;
+    background: rgba(7, 22, 32, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.answer-option__letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: #102b3a;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.answer-option__text {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.answer-option__tag {
+    flex: none;
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.answer-option.is-correct {
+    background: rgba(74, 222, 128, 0.08);
+    border-color: rgba(74, 222, 128, 0.55);
+}
+
+.answer-option.is-correct .answer-option__letter {
+    background: rgba(74, 222, 128, 0.18);
+    color: var(--green);
+}
+
+.answer-option.is-correct .answer-option__text {
+    color: var(--text-strong);
+}
+
+.answer-option.is-correct .answer-option__tag {
+    color: var(--green);
+}
+
+.answer-option.is-wrong {
+    background: rgba(248, 113, 113, 0.07);
+    border-color: rgba(248, 113, 113, 0.55);
+}
+
+.answer-option.is-wrong .answer-option__letter {
+    background: rgba(248, 113, 113, 0.18);
+    color: var(--red);
+}
+
+.answer-option.is-wrong .answer-option__tag {
+    color: var(--red);
+}
+
+.mistake__timeout {
+    margin-top: var(--space-3);
+    color: var(--red);
+    font-size: 0.9rem;
+}
+
+.explanation {
+    margin-top: var(--space-5);
+    padding: 16px 18px;
+    background: rgba(13, 36, 49, 0.65);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal);
+    border-radius: 10px;
+}
+
+.explanation__title {
+    margin-bottom: var(--space-2);
+    color: var(--text-strong);
+    font-size: 0.98rem;
+    font-weight: 600;
+}
+
+.explanation p {
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.explanation__source {
+    margin-top: var(--space-3);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.mistake-more {
+    margin: 16px 0 var(--space-5);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.mistakes-empty {
+    padding: 48px 24px;
+}
+
+/* ======================================================================
+ * 5. Màn hình nhỏ
+ * ==================================================================== */
+
+@media (max-width: 960px) {
+    .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dash-side {
+        gap: var(--space-4);
+    }
+}
+
+@media (max-width: 720px) {
+    .learner-page {
+        padding-block: 28px 56px;
+    }
+
+    .mistake__answers {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mistake__question {
+        font-size: 1.15rem;
+    }
+
+    .lb-table th,
+    .lb-table td {
+        padding-inline: 14px;
+        font-size: 0.92rem;
+    }
+
+    .lb-table th:first-child,
+    .lb-table td:first-child {
+        width: auto;
+        padding-left: 16px;
+    }
+
+    .history-head {
+        margin-bottom: var(--space-4);
+    }
+
+    .attempt__head {
+        padding: 16px;
+    }
+
+    .attempt__details > summary {
+        padding-inline: 16px;
+    }
+
+    .attempt__answers {
+        padding-inline: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .auth-shell {
+        padding: 32px 12px 56px;
+    }
+
+    .auth-card {
+        padding: 28px 22px;
+    }
+
+    .auth-card__title {
+        font-size: 1.7rem;
+    }
+
+    .profile-tiles {
+        gap: var(--space-2);
+    }
+
+    .profile-tiles .tile__value {
+        font-size: 1.75rem;
+    }
+
+    .attempt__side {
+        text-align: left;
+    }
+
+    .lb-table th {
+        white-space: normal;
+    }
+
+    .lb-table th:first-child,
+    .lb-table td:first-child {
+        padding-left: 12px;
+    }
+
+    .empty-state--history {
+        padding: 32px 16px;
+    }
+
+    .mistakes-empty {
+        padding: 36px 16px;
+    }
+}
