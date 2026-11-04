@@ -1,0 +1,5 @@
+@extends('layouts.app')
+@section('title','Tạo bộ câu hỏi thủ công')
+@section('content')<div class="container screen-page admin-page"><h1>Tạo bộ nháp thủ công</h1>@include('admin.partials.nav')<form class="bento-card" method="post" action="{{ route('admin.question-sets.store') }}">@csrf
+<label for="article_id">Bài kiến thức</label><select class="form-control" id="article_id" name="article_id" required>@foreach($articles as $article)<option value="{{ $article->id }}" @selected((string)old('article_id')===(string)$article->id)>{{ $article->title }}</option>@endforeach</select>
+<label for="title">Tên bộ câu hỏi</label><input class="form-control" id="title" name="title" required maxlength="200" value="{{ old('title') }}">@include('admin.partials.zone')<button class="btn btn-primary">Tạo bộ nháp</button></form></div>@endsection
