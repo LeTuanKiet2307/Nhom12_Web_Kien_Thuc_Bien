@@ -807,6 +807,30 @@ class QuizFlowTest extends TestCase
         }
     }
 
+    public function test_quiz_pages_load_stylesheets_from_layout(): void
+    {
+        $user = $this->makeUser();
+        [$attempt, $questions] = $this->startAttempt($user, 2);
+
+        // Layout phải nạp font + base.css và @stack('styles') để quiz.css/learner.css có hiệu lực.
+        $read = $this->openAttemptPage($user, $attempt);
+        $read->assertOk()
+            ->assertSee('css/base.css', false)
+            ->assertSee('css/quiz.css', false)
+            ->assertSee('fonts/be-vietnam-pro.css', false);
+
+        $this->travel(181)->seconds();
+        $questionPage = $this->openAttemptPage($user, $attempt);
+        $questionPage->assertOk()
+            ->assertSee('css/base.css', false)
+            ->assertSee('css/quiz.css', false);
+
+        // Trang ngoài Quiz giữ giao diện của nhóm, không nạp bộ CSS quiz.
+        $this->actingAs($user->fresh())->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee('css/base.css', false);
+    }
+
     public function test_t22_submit_route_is_removed(): void
     {
         $user = $this->makeUser();

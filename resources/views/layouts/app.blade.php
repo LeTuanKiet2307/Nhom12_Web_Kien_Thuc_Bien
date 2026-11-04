@@ -6,6 +6,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'AbyssalMind - Đấu Trường Kiến Thức Đại Dương')</title>
     <link rel="stylesheet" href="{{ asset('css/ocean-app.css') }}">
+    @if (request()->routeIs('quiz.*'))
+        {{-- Trang Quiz dùng bộ giao diện riêng: nạp font + token nền trước, CSS quiz qua @stack('styles'). --}}
+        <link rel="stylesheet" href="{{ asset('fonts/be-vietnam-pro.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+    @endif
+    @stack('styles')
+    @stack('head')
 </head>
 <body>
     <nav class="ocean-nav">
