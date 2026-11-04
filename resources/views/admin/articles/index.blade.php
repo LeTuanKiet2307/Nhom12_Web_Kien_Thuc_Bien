@@ -1,0 +1,4 @@
+@extends('layouts.app')
+@section('title','Bài kiến thức đã lưu')
+@section('content')<div class="container screen-page admin-page"><h1>Bài kiến thức đã lưu</h1>@include('admin.partials.nav')<a class="btn btn-primary" href="{{ route('admin.articles.create') }}">Thêm bài thủ công</a>
+@forelse($articles as $article)<div class="bento-card"><h2>{{ $article->title }}</h2><p>{{ $article->source_name }} · {{ $article->quiz_sets_count }} bộ câu hỏi</p><a class="btn btn-outline" href="{{ route('admin.articles.edit',$article) }}">Xem / sửa bài</a></div>@empty<p>Chưa có bài. Hãy tìm Wikipedia hoặc nhập thủ công.</p>@endforelse{{ $articles->links('pagination::simple-default') }}</div>@endsection

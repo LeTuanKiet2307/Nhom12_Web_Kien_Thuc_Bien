@@ -1,0 +1,8 @@
+@extends('layouts.app')
+@section('title','Tìm bài Wikipedia')
+@section('content')<div class="container screen-page admin-page"><h1>Tìm kiến thức từ Wikipedia</h1>@include('admin.partials.nav')
+<form class="bento-card" method="get"><label for="search">Từ khóa tiếng Việt</label><input class="form-control" id="search" name="search" value="{{ request('search') }}" required maxlength="100"><button class="btn btn-primary">Tìm bài liên quan</button></form>
+@if($apiError)<div class="bento-card" role="alert">{{ $apiError }} <a href="{{ route('admin.articles.create') }}">Nhập bài thủ công</a></div>@endif
+@if($preview)<div class="bento-card"><h2>{{ $preview['title'] }}</h2><div style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:500px;overflow:auto">{{ $preview['content'] }}</div><p>Nguồn: <a href="{{ $preview['source_url'] }}" target="_blank" rel="noopener noreferrer">{{ $preview['source_name'] }}</a> · {{ $preview['license'] }}</p><form method="post" action="{{ route('admin.wikipedia.store') }}">@csrf<input type="hidden" name="page_id" value="{{ $preview['wiki_page_id'] }}"><button class="btn btn-primary">Lưu bài vào thư viện</button></form></div>@endif
+@foreach($results as $result)<div class="bento-card"><h2>{{ $result['title'] }}</h2><p>{{ $result['snippet'] }}</p><a class="btn btn-outline" href="{{ route('admin.wikipedia.index',['search'=>request('search'),'page_id'=>$result['id']]) }}">Xem trước bài này</a></div>@endforeach
+@if(request('search')&&!$results&&!$apiError)<p>Không tìm thấy bài phù hợp. Hãy thử từ khóa khác.</p>@endif</div>@endsection
