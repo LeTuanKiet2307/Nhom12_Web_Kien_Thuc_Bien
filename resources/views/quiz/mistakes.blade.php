@@ -27,7 +27,7 @@
                         📚 Chủ đề: {{ $q->quizSet->title ?? 'Bộ đề Đại dương' }} ({{ $q->quizSet->ocean_zone ?? '' }})
                     </span>
                     <span style="font-size: 0.8rem; color: var(--text-muted);">
-                        Làm sai {{ $wrongItem->created_at->diffForHumans() }}
+                        Làm sai {{ $wrongItem->created_at->locale('vi')->diffForHumans() }}
                     </span>
                 </div>
 
