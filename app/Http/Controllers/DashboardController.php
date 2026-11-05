@@ -19,6 +19,7 @@ class DashboardController extends Controller
         // Lấy 5 lần làm bài gần nhất kèm chi tiết từng câu hỏi & câu trả lời
         $recentAttempts = QuizAttempt::with(['quizSet', 'answers.question'])
             ->where('user_id', $user->id)
+            ->completed()
             ->latest()
             ->take(5)
             ->get();
